@@ -1,17 +1,21 @@
 {% extends 'layout.html' %}
 
-{% block title %}Posts{% endblock %}
+{% block title %}Lumen{% endblock %}
 
 {% block content %}
-  <h1>Posts</h1>
-  <p>You have <strong>{{ posts.length }}</strong> posts!</p>
-  <p><a href="/post/new">Create a Post</a></p>
-  <ul id="posts">
-    {% for post in posts %}
+<h1>Send XLM</h1>
+<p>You can send 1-10 XLM mine stellar address</p>
+<input type="text" placeholder="e.g: your stellar public key">
+<input type="submit" value="Send XLM">
+<h1>Received XLM</h1>
+  <p>You have sended <strong>{{ lists.length }}</strong> XLM lists!</p>
+  <ul id="lists">
+    {% for list in lists %}
       <li>
-        <h2>{{ post.title }}</h2>
-        <p><a href="/post/{{ post.id }}">Read post</a></p>
+        <h2>{{ list.title }}</h2>
+        <p><a href="">stellar explorer</a></p>
       </li>
     {% endfor %}
   </ul>
-{% endblock %}
+  {% endblock %}
+
