@@ -1,7 +1,9 @@
 const render = require('./lib/render');
+const config = require('./config/config.json');
 const logger = require('koa-logger');
 const router = require('koa-router')();
 const koaBody = require('koa-body');
+
 
 const Koa = require('koa');
 const app = module.exports = new Koa();
@@ -15,6 +17,7 @@ router.get('/lumen', lumen).get('/token', token);
 app.use(router.routes());
 
 async function lumen(ctx) {
+  console.log(config['test']);
   let lists2 = {"lists":
     [
     { address: "xxxxxxxxxxxxxx", timestamp: "20101-101001-11", amount: 10 },
