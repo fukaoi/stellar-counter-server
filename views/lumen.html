@@ -12,8 +12,9 @@
   <ul id="lists">
     {% for list in lists %}
       <li>
-        <h2>{{ list.title }}</h2>
-        <p><a href="">stellar explorer</a></p>
+        <ul><a href="">{{ list.address }}</a></ul>
+        <ul>{{ list.amount }}</ul>
+        <ul>{{ list.timestamp }}</ul>
       </li>
     {% endfor %}
   </ul>
