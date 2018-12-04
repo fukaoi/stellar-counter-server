@@ -2,11 +2,21 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdnjs.com/libraries/bulma" >
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/0.11.0/stellar-sdk.js"></script>
+
+  
   <style>
     body {
       padding: 80px;
       font: 16px Helvetica, Arial;
+    }
+
+    a {
+      color: #3A9AC2;
     }
 
     h1 {
@@ -17,27 +27,15 @@
       font-size: 1.2em;
     }
 
-    #lists {
-      margin: 0;
-      padding: 0;
+    table {
+      width:960px;
     }
 
-    #lists li {
-      margin: 40px 0;
-      padding: 0;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #eee;
-      list-style: none;
+    table tbody tr {
+      border-bottom: 1px solid #dddd;
+      margin-bottom: 20px;
     }
     
-    #lists li ul {
-      display: inline;
-    }
-
-    #lists li:last-child {
-      border-bottom: none;
-    }
-
     #header {
       position: fixed;
       top: 0;
@@ -74,7 +72,7 @@
     input[type = text] {
       width: 500px;
     }
-  </style>
+  </style>  
 
 <body>
   <div id="header">Only testnet in stellar network</div>
