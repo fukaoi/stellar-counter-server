@@ -11,37 +11,40 @@
 <p>You have sended XLM lists!</p>
 <table id="lists">
 </table>
-  
+
 <script>
-  const create_li = (address, amount, created_at, tx_hash) =>
-    `<tr>
+  const added_txinfo = (address, amount, created_at, tx_hash) => {
+    const html =
+      `<tr>
       <td align="left"><a href="https://testnet.steexp.com/tx/${tx_hash}" target="_blank">${address}</a></td>
       <td align="right">${amount}</td>
       <td align="right">${created_at}</td>
     </tr>`;
+    document.getElementById('lists').insertAdjacentHTML("afterbegin", html);
+  }
 
-  window.onload = () => {
-    const server = new StellarSdk.Server("{{horizonUrl}}"); 
-    server.payments()
-      .forAccount("{{publicKey}}")
-      .cursor()
-      .stream({
+  const extract_memo = (message) => {
+    message.transaction().then((a) => {
+      if (a.memo_type == "text") {
+        console.log(a.memo);
+      }
+    });
+  }
+
+  const stream_stellar = (add_callback, extract_callback) => {
+    new StellarSdk.Server("{{horizonUrl}}")
+      .payments().forAccount("{{publicKey}}").cursor().stream({
         onmessage: (message) => {
-          if (message.from == undefined)return;
-          message.transaction().then((a)=>{
-            if(a.memo_type == "text") console.log(a.memo);
-          });
-          const html = create_li
-          (
-            message.from, 
-            message.amount, 
-            message.created_at,
-            message.transaction_hash
-          );
-          document.getElementById('lists').insertAdjacentHTML("afterbegin", html);
+          if (message.from == undefined) return;
+          add_callback(message.from, message.amount, message.created_at,
+            message.transaction_hash);
+          extract_callback(message);  
         }
       });
   }
 
+  window.onload = () => {
+    stream_stellar(added_txinfo, extract_memo);
+  }
 </script>
 {% endblock %}
