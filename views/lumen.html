@@ -8,12 +8,10 @@
 <input type="text" placeholder="e.g: your stellar public key">
 <input type="submit" value="Send XLM">
 <h1>Received XLM</h1>
-<p>You have sended <strong>{{ lists.length }}</strong> XLM lists!</p>
+<p>You have sended XLM lists!</p>
 <table id="lists"></table>
   
-{{sdk}}
 <script>
-
   const create_li = (address, amount, created_at, tx_hash) =>
     `<tr>
       <td align="left"><a href="https://testnet.steexp.com/tx/${tx_hash}" target="_blank">${address}</a></td>
@@ -21,16 +19,13 @@
       <td align="right">${created_at}</td>
     </tr>`;
 
-  const horizon_url = 'https://horizon-testnet.stellar.org';
-  const publicKey = 'GBY4J7D4ERYAVD2IXTIFS6SSSSG343LNF5B57F4BJL5IIEKGUBEBYC37';
   window.onload = () => {
-    new StellarSdk.Server(horizon_url).payments()
-      .forAccount(publicKey)
+    new StellarSdk.Server("{{horizonUrl}}").payments()
+      .forAccount("{{publicKey}}")
       .cursor()
       .stream({
         onmessage: (message) => {
           if (message.from == undefined)return;
-          console.log(message)
           const html = create_li
           (
             message.from, 

@@ -1,9 +1,8 @@
 const render = require('./lib/render');
-const ClientSdk = require('./lib/stellar-client');
+const config = require('./config/config.json');
 const logger = require('koa-logger');
 const router = require('koa-router')();
 const koaBody = require('koa-body');
-
 
 const Koa = require('koa');
 const app = module.exports = new Koa();
@@ -17,8 +16,10 @@ router.get('/lumen', lumen).get('/token', token);
 app.use(router.routes());
 
 async function lumen(ctx) {
-  const client = new ClientSdk();
-  await ctx.render('lumen', {sdk: client});
+  await ctx.render('lumen', {
+    horizonUrl: config['horizonUrl'],
+    publicKey: config['publicKey']
+  });
 }
 
 async function token(ctx) {
