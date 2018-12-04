@@ -9,7 +9,8 @@
 <input type="submit" value="Send XLM">
 <h1>Received XLM</h1>
 <p>You have sended XLM lists!</p>
-<table id="lists"></table>
+<table id="lists">
+</table>
   
 <script>
   const create_li = (address, amount, created_at, tx_hash) =>
@@ -20,12 +21,16 @@
     </tr>`;
 
   window.onload = () => {
-    new StellarSdk.Server("{{horizonUrl}}").payments()
+    const server = new StellarSdk.Server("{{horizonUrl}}"); 
+    server.payments()
       .forAccount("{{publicKey}}")
       .cursor()
       .stream({
         onmessage: (message) => {
           if (message.from == undefined)return;
+          message.transaction().then((a)=>{
+            if(a.memo_type == "text") console.log(a.memo);
+          });
           const html = create_li
           (
             message.from, 
