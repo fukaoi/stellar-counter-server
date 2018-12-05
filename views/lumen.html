@@ -8,26 +8,29 @@
 <input type="text" placeholder="e.g: your stellar public key">
 <input type="submit" value="Send XLM">
 <h1>Received XLM</h1>
-<p>You have sended XLM lists!</p>
-<table id="lists">
-</table>
+<p>Your sended XLM lists!</p>
+
+<table id="lists"></table>
 
 <script>
   const txinfo = (message) => {
     const html =
-    `<tr>
+    `<tr class="transition" id="${message.transaction_hash}">
       <td align="left">
         <a href="https://testnet.steexp.com/tx/${message.transaction_hash}" target="_blank">${message.from}</a>
       </td>
       <td align="right">${message.amount}</td>
+      <td align="center" width="200px" class="memo"> </td>
       <td align="right">${message.created_at}</td>
     </tr>`;
-    document.getElementById('lists').insertAdjacentHTML("afterbegin", html);
+    document.getElementById('lists').insertAdjacentHTML('afterbegin', html);
   }
 
   const memo = (message) => {
-    message.transaction().then((a) => {
-      if (a.memo_type == "text") console.log(a.memo);
+    message.transaction().then((tx) => {
+      if (tx.memo_type == "text") {
+        document.getElementById(tx.hash).children[2].innerText = tx.memo;
+      }
     });
   }
 
