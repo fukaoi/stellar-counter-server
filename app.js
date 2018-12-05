@@ -12,7 +12,7 @@ let lists = [];
 app.use(logger());
 app.use(render);
 app.use(koaBody());
-router.get('/lumen', lumen).get('/token', token);
+router.get('/lumen', lumen).get('/token', token).post('/send', send);
 app.use(router.routes());
 
 async function lumen(ctx) {
@@ -24,6 +24,11 @@ async function lumen(ctx) {
 
 async function token(ctx) {
   await ctx.render('token', {lists: lists});
+}
+
+async function send(ctx) {
+  console.log(ctx.request.body);
+  ctx.response.status = 201;
 }
 
 
