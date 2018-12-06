@@ -4,6 +4,7 @@ const StellarClient = require('./lib/stellar-client');
 const logger = require('koa-logger');
 const router = require('koa-router')();
 const koaBody = require('koa-body');
+const crypto = require('crypto');
 
 const Koa = require('koa');
 const app = module.exports = new Koa();
@@ -29,9 +30,8 @@ async function token(ctx) {
 
 async function send(ctx) {
   const param = ctx.request.body;
-  new StellarClient().sendXLM(param.publickey, param.amount);
+  new StellarClient().sendXLM(param.publickey, param.amount, param.txhash);
   ctx.response.status = 201;
 }
-
 
 if (!module.parent) app.listen(3000);

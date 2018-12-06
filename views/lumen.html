@@ -3,10 +3,12 @@
 {% block title %}Lumen{% endblock %}
 
 {% block content %}
-<h1>Send XLM</h1>
-<p>You can send 1-10 XLM mine stellar address</p>
-<input type="text" placeholder="e.g: your stellar public key">
-<input type="submit" value="Send XLM">
+
+<h3>{{publicKey}}</h3>
+<h1>Sended XLM</h1>
+<p>I sended XLM lists!</p>
+
+
 <h1>Received XLM</h1>
 <p>Your sended XLM lists!</p>
 
@@ -31,7 +33,11 @@
       if (tx.memo_type == 'text') {
         document.getElementById(tx.hash).children[2].innerText = tx.memo;
         if (tx.memo == 'reply') {
-          send({publickey: message.from, amount: message.amount});
+          send({
+            publickey: message.from, 
+            amount: message.amount,
+            txhash: tx.hash
+          });
         }
       }
     });
