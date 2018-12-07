@@ -7,12 +7,11 @@
 <h3>{{publicKey}}</h3>
 <h1>Sended XLM</h1>
 <p>I sended XLM lists!</p>
-
+<table id="sendLists"></table>
 
 <h1>Received XLM</h1>
 <p>Your sended XLM lists!</p>
-
-<table id="lists"></table>
+<table id="receiveLists"></table>
 
 <script>
   const txinfo = (message) => {
@@ -25,7 +24,8 @@
       <td align="center" width="200px" class="memo"> </td>
       <td align="right">${message.created_at}</td>
     </tr>`;
-    document.getElementById('lists').insertAdjacentHTML('afterbegin', html);
+    const elementId = message.from == '{{publicKey}}' ? 'sendLists' : 'receiveLists';
+    document.getElementById(elementId).insertAdjacentHTML('afterbegin', html);
   }
 
   const memo = (message) => {
