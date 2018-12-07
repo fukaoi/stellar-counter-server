@@ -16,7 +16,7 @@
 <script>
   const txinfo = (message) => {
     const html =
-    `<tr class="transition" id="${message.transaction_hash}">
+      `<tr class="transition" id="${message.transaction_hash}">
       <td align="left">
         <a href="https://testnet.steexp.com/tx/${message.transaction_hash}" target="_blank">${message.from}</a>
       </td>
@@ -28,42 +28,59 @@
     document.getElementById(elementId).insertAdjacentHTML('afterbegin', html);
   }
 
-  const memo = (message) => {
+  const receive_memo = (message) => {
+    // message.transaction().then((tx) => {
+    //   if (tx.memo_type == 'text') {
+    //     document.getElementById(tx.hash).children[2].innerText = tx.memo;
+    // if (tx.memo == 'reply') {
+    //   send({
+    //     publickey: message.from, 
+    //     amount: message.amount,
+    //     txhash: tx.hash
+    //   });
+    // }
+    // }
+    // });
+  }
+
+  const send_memo = (message) => {
     message.transaction().then((tx) => {
-      if (tx.memo_type == 'text') {
-        document.getElementById(tx.hash).children[2].innerText = tx.memo;
-        if (tx.memo == 'reply') {
-          send({
-            publickey: message.from, 
-            amount: message.amount,
-            txhash: tx.hash
+
+      if (tx.memo_type == 'hash') {
+        fetch(`http://localhost:3000/decode?encoded_memo=${tx.memo}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json; charset=utf-8" },
+        })
+          .then(response => {
+            console.log("aaaaaaaa", response);
+            document.getElementById(tx.hash).children[2].innerText = response;
           });
-        }
       }
     });
   }
 
   const send = (data) => {
     fetch('http://localhost:3000/send', {
-        method: "POST", 
-        cache: "no-cache",
-        headers: {"Content-Type": "application/json; charset=utf-8"},
-        body: JSON.stringify(data),
+      method: "POST",
+      cache: "no-cache",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(data),
     })
-    .then(response => console.log(response));
+      .then(response => console.log(response));
   }
 
-  const stream = (txinfo_callback, memo_callback) => {
+  const stream = (txinfo_callback, receive_memo_callback, send_memo_callback) => {
     new StellarSdk.Server("{{horizonUrl}}")
       .payments().forAccount("{{publicKey}}").cursor().stream({
         onmessage: (message) => {
           if (message.from == undefined) return;
           txinfo_callback(message);
-          memo_callback(message);  
+          receive_memo_callback(message);
+          send_memo_callback(message);
         }
       });
   }
 
-  window.onload = () => stream(txinfo, memo);
+  window.onload = () => stream(txinfo, receive_memo, send_memo);
 </script>
 {% endblock %}
