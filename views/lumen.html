@@ -4,7 +4,9 @@
 
 {% block content %}
 
-<p><h1>{{publicKey}}</h1>Reply server address</p>
+<p>
+  <h1>{{publicKey}}</h1>Reply server address
+</p>
 
 <h1>Sended XLM</h1>
 <p>Reply server sended XLM lists!</p>
@@ -46,16 +48,8 @@
 
   const send_memo = (message) => {
     message.transaction().then((tx) => {
-
       if (tx.memo_type == 'hash') {
-        fetch(`http://localhost:3000/decode?encoded_memo=${tx.memo}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json; charset=utf-8" },
-        })
-          .then(response => {
-            console.log("aaaaaaaa", response);
-            document.getElementById(tx.hash).children[2].innerText = response;
-          });
+        document.getElementById(tx.hash).children[2].innerText = tx.memo;
       }
     });
   }
