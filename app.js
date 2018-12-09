@@ -19,8 +19,9 @@ app.use(router.routes());
 
 async function lumen(ctx) {
   await ctx.render('lumen', {
-    horizonUrl: config['horizonUrl'],
-    publicKey: config['publicKey']
+    horizonUrl : config['horizonUrl'],
+    publicKey  : config['publicKey'],
+    limit      : config['linit']   
   });
 }
 
