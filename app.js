@@ -21,7 +21,7 @@ async function lumen(ctx) {
   await ctx.render('lumen', {
     horizonUrl : config['horizonUrl'],
     publicKey  : config['publicKey'],
-    limit      : config['linit']   
+    limit      : config['limit']   
   });
 }
 

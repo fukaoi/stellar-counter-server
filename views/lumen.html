@@ -9,17 +9,19 @@
 </p>
 
 <h1>Sended XLM</h1>
-<p>Reply server sended XLM lists!</p>
+<p>Reply server sended XLM lists(Diplay limit: {{limit}})</p>
 <table id="sendLists"></table>
 
 <h1>Received XLM</h1>
-<p>Your sended XLM lists!</p>
+<p>Your sended XLM lists(Diplay limit: {{limit}})</p>
 <table id="receiveLists"></table>
 
 <script>
-  const txinfo = (message) => {
-    const html =
-      `<tr class="transition" id="${message.transaction_hash}">
+  let receive_pool = [];
+  let send_pool = [];
+
+  const html = (message) =>
+    `<tr class="transition" id="${message.transaction_hash}">
       <td align="left">
         <a href="https://testnet.steexp.com/tx/${message.transaction_hash}" target="_blank">${message.from}</a>
       </td>
@@ -27,34 +29,42 @@
       <td align="center" width="200px" class="memo"> </td>
       <td align="right">${message.created_at}</td>
     </tr>`;
-    const elementId = message.from == '{{publicKey}}' ? 'sendLists' : 'receiveLists';
-    document.getElementById(elementId).insertAdjacentHTML('afterbegin', html);
+
+
+  const txinfo = (message) => {
+    let elementId;
+    if (message.from == '{{publicKey}}') {
+      elementId = 'sendLists';
+      send_pool.push(message.transaction_hash);
+    } else {
+      elementId = 'receiveLists';
+      receive_pool.push(message.transaction_hash);
+    }
+    document.getElementById(elementId).insertAdjacentHTML('afterbegin', html(message));
   }
 
-  const receive_memo = (message) => {
-    message.transaction().then((tx) => {
-      if (tx.memo_type == 'text') {
-        document.getElementById(tx.hash).children[2].innerText = tx.memo;
-    // if (tx.memo == 'reply') {
-    //   send({
-    //     publickey: message.from, 
-    //     amount: message.amount,
-    //     txhash: tx.hash
-    //   });
-    // }
-    }
-    });
+  const viewLimitter = (limit = '{{limit}}') => {
+    if (receive_pool.length > Number(limit)) {
+      const txHash = receive_pool.shift();
+      document.getElementById(txHash).remove();
+    } 
+
+    if (send_pool.length > Number(limit)) {
+      const txHash = receive_pool.shift();
+      document.getElementById(txHash).remove();
+    }     
   }
 
   function base64ToArrayBuffer(base64) {
-    var binary_string =  window.atob(base64);
+    if (base64 == undefined) return;
+    var binary_string = window.atob(base64);
     var len = binary_string.length;
-    var bytes = new Uint8Array( len );
-    for (var i = 0; i < len; i++)        {
-        bytes[i] = binary_string.charCodeAt(i);
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+      bytes[i] = binary_string.charCodeAt(i);
     }
     return Array.from(bytes).map(v => ('00' + v.toString(16)).slice(-2)).join('');
-}
+  }
 
 
   const memo = (message) => {
@@ -64,7 +74,14 @@
         if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = memo_hex;
       } else {
         if (tx.memo_type == 'text') document.getElementById(tx.hash).children[2].innerText = tx.memo;
-      } 
+                // if (tx.memo == 'reply') {
+        //   send({
+        //     publickey: message.from, 
+        //     amount: message.amount,
+        //     txhash: tx.hash
+        //   });
+        // }
+      }
     });
   }
 
@@ -85,10 +102,13 @@
           if (message.from == undefined) return;
           txinfo_callback(message);
           memo_callback(message);
+          viewLimitter();
         }
       });
   }
 
-  window.onload = () => main(txinfo, memo);
+  window.onload = () => {
+    main(txinfo, memo);
+  }
 </script>
 {% endblock %}
