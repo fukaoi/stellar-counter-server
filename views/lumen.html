@@ -46,15 +46,13 @@
     });
   }
 
-  function _base64ToArrayBuffer(base64) {
+  function base64ToArrayBuffer(base64) {
     var binary_string =  window.atob(base64);
     var len = binary_string.length;
     var bytes = new Uint8Array( len );
     for (var i = 0; i < len; i++)        {
         bytes[i] = binary_string.charCodeAt(i);
     }
-    console.log(bytes);
-    console.log(Array.from(bytes).map(v => v.toString(16)));
     return Array.from(bytes).map(v => ('00' + v.toString(16)).slice(-2)).join('');
 }
 
@@ -62,9 +60,8 @@
   const memo = (message) => {
     message.transaction().then((tx) => {
       if (message.from == '{{publicKey}}') {
-        console.log(tx.memo);
-        console.log(_base64ToArrayBuffer(tx.memo));
-        if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = tx.memo;
+        const memo_hex = base64ToArrayBuffer(tx.memo);
+        if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = memo_hex;
       } else {
         if (tx.memo_type == 'text') document.getElementById(tx.hash).children[2].innerText = tx.memo;
       } 
