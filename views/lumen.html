@@ -54,12 +54,15 @@
         bytes[i] = binary_string.charCodeAt(i);
     }
     console.log(bytes);
-    return Array.from(bytes).map(v => v.toString(16).slice(-2)).join('')
+    console.log(Array.from(bytes).map(v => v.toString(16)));
+    return Array.from(bytes).map(v => ('00' + v.toString(16)).slice(-2)).join('');
 }
+
 
   const memo = (message) => {
     message.transaction().then((tx) => {
       if (message.from == '{{publicKey}}') {
+        console.log(tx.memo);
         console.log(_base64ToArrayBuffer(tx.memo));
         if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = tx.memo;
       } else {
