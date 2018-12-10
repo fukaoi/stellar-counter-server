@@ -47,12 +47,12 @@
     if (receive_pool.length > Number(limit)) {
       const txHash = receive_pool.shift();
       document.getElementById(txHash).remove();
-    } 
+    }
 
     if (send_pool.length > Number(limit)) {
       const txHash = receive_pool.shift();
       document.getElementById(txHash).remove();
-    }     
+    }
   }
 
   function base64ToArrayBuffer(base64) {
@@ -74,13 +74,13 @@
         if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = memo_hex;
       } else {
         if (tx.memo_type == 'text') document.getElementById(tx.hash).children[2].innerText = tx.memo;
-                // if (tx.memo == 'reply') {
-        //   send({
-        //     publickey: message.from, 
-        //     amount: message.amount,
-        //     txhash: tx.hash
-        //   });
-        // }
+        if (tx.memo == 'reply') {
+          send({
+            publickey: message.from, 
+            amount: message.amount,
+            txhash: tx.hash
+          });
+        }
       }
     });
   }
@@ -97,7 +97,7 @@
 
   const main = (txinfo_callback, memo_callback) => {
     new StellarSdk.Server("{{horizonUrl}}")
-      .payments().forAccount("{{publicKey}}").cursor().stream({
+      .payments().forAccount("{{publicKey}}").cursor('now').stream({
         onmessage: (message) => {
           if (message.from == undefined) return;
           txinfo_callback(message);
