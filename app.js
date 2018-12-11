@@ -7,26 +7,36 @@ const koaBody = require('koa-body');
 
 const Koa = require('koa');
 const app = module.exports = new Koa();
-
-let lists = [];
+const sse = require('koa-sse-stream');
 
 app.use(logger());
 app.use(render);
 app.use(koaBody());
-router.get('/lumen', lumen).get('/token', token).get('/decode', decode)
-      .post('/send', send);
 app.use(router.routes());
+
+router.get('/lumen', lumen).get('/token', token).get('/decode', decode)
+  .post('/send', send);
+
+app.use(sse({
+  maxClients: 50,
+  pingInterval: 1000
+}));
+
+app.use(async (ctx) => {
+  new StellarClient().paymentMessage(ctx.sse.send);
+  ctx.sse.end();
+});
 
 async function lumen(ctx) {
   await ctx.render('lumen', {
-    horizonUrl : config['horizonUrl'],
-    publicKey  : config['publicKey'],
-    limit      : config['limit']   
+    horizonUrl: config['horizonUrl'],
+    publicKey: config['publicKey'],
+    limit: config['limit']
   });
 }
 
 async function token(ctx) {
-  await ctx.render('token', {lists: lists});
+  await ctx.render('token', { lists: lists });
 }
 
 async function send(ctx) {

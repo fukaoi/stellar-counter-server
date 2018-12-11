@@ -17,6 +17,12 @@
 <table id="receiveLists"></table>
 
 <script>
+
+  var es = new EventSource("/");
+    es.onmessage = function(ev) {
+    console.log(ev.data); //will output 'Hello world!'
+  };
+
   let receive_pool = [];
   let send_pool = [];
 
