@@ -60,7 +60,7 @@
     var binary_string = window.atob(base64)
     var len = binary_string.length
     var bytes = new Uint8Array(len)
-    for (var i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       bytes[i] = binary_string.charCodeAt(i)
     }
     return Array.from(bytes).map(v => ('00' + v.toString(16)).slice(-2)).join('')
@@ -70,7 +70,7 @@
   const memo = (message) => {
     message.transaction().then((tx) => {
       if (message.from == '{{publicKey}}') {
-        const memo_hex = base64ToArrayBuffer(tx.memo)
+        const memo_hex = base64ToArrayBuffer(tx.memo).toUpperCase();
         if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = memo_hex
       } else {
         if (tx.memo_type == 'text') document.getElementById(tx.hash).children[2].innerText = tx.memo
@@ -87,7 +87,7 @@
 
   const send = (data) => {
     fetch('http://localhost:3000/send', {
-      method: "POST",
+      method: "post",
       cache: "no-cache",
       headers: { "Content-Type": "application/json charset=utf-8" },
       body: JSON.stringify(data),
