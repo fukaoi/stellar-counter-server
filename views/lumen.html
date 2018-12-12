@@ -17,14 +17,8 @@
 <table id="receiveLists"></table>
 
 <script>
-
-  var es = new EventSource("/");
-    es.onmessage = function(ev) {
-    console.log(ev.data); //will output 'Hello world!'
-  };
-
-  let receive_pool = [];
-  let send_pool = [];
+  let receive_pool = []
+  let send_pool = []
 
   const html = (message) =>
     `<tr class="transition" id="${message.transaction_hash}">
@@ -34,87 +28,87 @@
       <td align="right">${message.amount}</td>
       <td align="center" width="200px" class="memo"> </td>
       <td align="right">${message.created_at}</td>
-    </tr>`;
+    </tr>`
 
 
   const txinfo = (message) => {
-    let elementId;
+    let elementId
     if (message.from == '{{publicKey}}') {
-      elementId = 'sendLists';
-      send_pool.push(message.transaction_hash);
+      elementId = 'sendLists'
+      send_pool.push(message.transaction_hash)
     } else {
-      elementId = 'receiveLists';
-      receive_pool.push(message.transaction_hash);
+      elementId = 'receiveLists'
+      receive_pool.push(message.transaction_hash)
     }
-    document.getElementById(elementId).insertAdjacentHTML('afterbegin', html(message));
+    document.getElementById(elementId).insertAdjacentHTML('afterbegin', html(message))
   }
 
   const viewLimitter = (limit = '{{limit}}') => {
     if (receive_pool.length > Number(limit)) {
-      const txHash = receive_pool.shift();
-      document.getElementById(txHash).remove();
+      const txHash = receive_pool.shift()
+      document.getElementById(txHash).remove()
     }
 
     if (send_pool.length > Number(limit)) {
-      const txHash = receive_pool.shift();
-      document.getElementById(txHash).remove();
+      const txHash = receive_pool.shift()
+      document.getElementById(txHash).remove()
     }
   }
 
   function base64ToArrayBuffer(base64) {
-    if (base64 == undefined) return;
-    var binary_string = window.atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
+    if (base64 == undefined) return
+    var binary_string = window.atob(base64)
+    var len = binary_string.length
+    var bytes = new Uint8Array(len)
     for (var i = 0; i < len; i++) {
-      bytes[i] = binary_string.charCodeAt(i);
+      bytes[i] = binary_string.charCodeAt(i)
     }
-    return Array.from(bytes).map(v => ('00' + v.toString(16)).slice(-2)).join('');
+    return Array.from(bytes).map(v => ('00' + v.toString(16)).slice(-2)).join('')
   }
 
 
   const memo = (message) => {
     message.transaction().then((tx) => {
       if (message.from == '{{publicKey}}') {
-        const memo_hex = base64ToArrayBuffer(tx.memo);
-        if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = memo_hex;
+        const memo_hex = base64ToArrayBuffer(tx.memo)
+        if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = memo_hex
       } else {
-        if (tx.memo_type == 'text') document.getElementById(tx.hash).children[2].innerText = tx.memo;
+        if (tx.memo_type == 'text') document.getElementById(tx.hash).children[2].innerText = tx.memo
         if (tx.memo == 'reply') {
           send({
             publickey: message.from, 
             amount: message.amount,
             txhash: tx.hash
-          });
+          })
         }
       }
-    });
+    })
   }
 
   const send = (data) => {
     fetch('http://localhost:3000/send', {
       method: "POST",
       cache: "no-cache",
-      headers: { "Content-Type": "application/json; charset=utf-8" },
+      headers: { "Content-Type": "application/json charset=utf-8" },
       body: JSON.stringify(data),
     })
-      .then(response => console.log(response));
+      .then(response => console.log(response))
   }
 
   const main = (txinfo_callback, memo_callback) => {
     new StellarSdk.Server("{{horizonUrl}}")
       .payments().forAccount("{{publicKey}}").cursor('now').stream({
         onmessage: (message) => {
-          if (message.from == undefined) return;
-          txinfo_callback(message);
-          memo_callback(message);
-          viewLimitter();
+          if (message.from == undefined) return
+          txinfo_callback(message)
+          memo_callback(message)
+          viewLimitter()
         }
-      });
+      })
   }
 
   window.onload = () => {
-    main(txinfo, memo);
+    main(txinfo, memo)
   }
 </script>
 {% endblock %}
