@@ -7,7 +7,7 @@
   <title>{% block title %}{% endblock %}</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/0.11.0/stellar-sdk.js"></script>
 
-  
+
   <style>
     body {
       padding: 80px;
@@ -27,15 +27,15 @@
     }
 
     table {
-      width:1440px;
-      border-collapse:collapse;
+      width: 1440px;
+      border-collapse: collapse;
     }
 
     tbody tr {
       border-top: 1px solid #dddd;
       height: 40px;
     }
-    
+
     #header-lumen {
       position: fixed;
       top: 0;
@@ -65,8 +65,8 @@
       height: 300px;
     }
 
-    input[type = text],
-      textarea {
+    input[type=text],
+    textarea {
       border: 1px solid #eee;
       border-top-color: #ddd;
       border-left-color: #ddd;
@@ -75,13 +75,12 @@
       font-size: .8em;
     }
 
-    input[type = submit] {
+    input[type=submit] {
       width: 100px;
       height: 45px;
       font-size: 105%;
     }
-
-  </style>  
+  </style>
 
 <body>
   <div id="{{ header }}">Only testnet in stellar network</div>
@@ -96,7 +95,7 @@
   let receive_pool = []
   let send_pool = []
 
-  const html = (message) =>
+  const html = message =>
     `<tr class="transition" id="${message.transaction_hash}">
       <td align="left">
         <a href="https://testnet.steexp.com/tx/${message.transaction_hash}" target="_blank">${message.from}</a>
@@ -107,7 +106,7 @@
     </tr>`
 
 
-  const txinfo = (message) => {
+  const txinfo = message => {
     let elementId
     if (message.from == '{{publicKey}}') {
       elementId = 'sendLists'
@@ -131,44 +130,41 @@
     }
   }
 
-  function base64ToArrayBuffer(base64) {
+  const base64ToArrayBuffer = base64 => {
     if (base64 == undefined) return
-    var binary_string = window.atob(base64)
-    var len = binary_string.length
-    var bytes = new Uint8Array(len)
+    let binaryString = window.atob(base64)
+    let len = binaryString.length
+    let bytes = new Uint8Array(len)
     for (let i = 0; i < len; i++) {
-      bytes[i] = binary_string.charCodeAt(i)
+      bytes[i] = binaryString.charCodeAt(i)
     }
     return Array.from(bytes).map(v => ('00' + v.toString(16)).slice(-2)).join('')
   }
 
 
-  const memo = (message) => {
-    message.transaction().then((tx) => {
-      if (message.from == '{{publicKey}}') {
-        const memo_hex = base64ToArrayBuffer(tx.memo).toUpperCase();
-        if (tx.memo_type == 'hash') document.getElementById(tx.hash).children[2].innerText = memo_hex
-      } else {
-        if (tx.memo_type == 'text') document.getElementById(tx.hash).children[2].innerText = tx.memo
-        if (tx.memo == 'reply') {
-          send({
-            publickey: message.from, 
-            amount: message.amount,
-            txhash: tx.hash
-          })
-        }
+  const memo = async message => {
+    const txObject = await message.transaction()
+    if (txObject.memo_type == 'hash') {
+      const memo_hex = base64ToArrayBuffer(txObject.memo).toUpperCase();
+      document.getElementById(txObject.hash).children[2].innerText = memo_hex
+    } else {
+      if (txObject.memo_type == 'text') document.getElementById(txObject.hash).children[2].innerText = txObject.memo
+      if (txObject.memo == 'reply') {
+        send({ publickey: message.from, amount: message.amount, txhash: txObject.hash })
       }
-    })
+    }
   }
 
-  const send = (data) => {
-    fetch('http://localhost:3000/send', {
+  const send = async data => {
+    try {
+      await fetch('http://localhost:3000/send', {
       method: "post",
       cache: "no-cache",
-      headers: { "Content-Type": "application/json charset=utf-8" },
-      body: JSON.stringify(data),
-    })
-      .then(response => console.log(response))
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)})
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const main = (txinfo_callback, memo_callback) => {
@@ -187,4 +183,5 @@
     main(txinfo, memo)
   }
 </script>
+
 </html>

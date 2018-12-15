@@ -36,8 +36,17 @@ async function token(ctx) {
 
 async function send(ctx) {
   const param = ctx.request.body
-  new StellarClient().sendXLM(param.publickey, param.amount, param.txhash)
-  ctx.response.status = 201
+  let status, body
+  if (!param.publickey || !param.amount || !param.txhash) {
+    status = 404
+    body = `Not found parameters => publickey:${param.publickey},amount:${param.amount},txhash:${param.txhash}`
+  } else {
+    const response = new StellarClient().sendXLM(param.publickey, param.amount, param.txhash)
+    status = 201
+    message = response  
+  }
+  ctx.response.status = status
+  ctx.response.message = body
 }
 
 if (!module.parent) app.listen(3000)
