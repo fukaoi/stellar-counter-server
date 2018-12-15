@@ -36,7 +36,7 @@
       height: 40px;
     }
     
-    #header {
+    #header-lumen {
       position: fixed;
       top: 0;
       left: 0;
@@ -44,6 +44,18 @@
       height: 20px;
       padding: 10px;
       background-color: #3A9AC2;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    #header-token {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      padding: 10px;
+      background-color: rgb(97, 194, 58);
       color: #ffffff;
       text-align: center;
     }
@@ -75,7 +87,7 @@
   </style>  
 
 <body>
-  <div id="header">Only testnet in stellar network</div>
+  <div id="{{ header }}">Only testnet in stellar network</div>
   <section id="content">
     {% block content %}
     <p>Missing content!</p>

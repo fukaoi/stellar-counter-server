@@ -18,6 +18,7 @@ router.get('/lumen', lumen).get('/token', token)
 
 async function lumen(ctx) {
   await ctx.render('lumen', {
+    header: 'header-lumen',
     horizonUrl: config['horizonUrl'],
     publicKey: config['publicKey'],
     limit: config['limit']
@@ -26,6 +27,7 @@ async function lumen(ctx) {
 
 async function token(ctx) {
   await ctx.render('token', {
+    header: 'header-token',
     horizonUrl: config['horizonUrl'],
     publicKey: config['publicKey'],
     limit: config['limit']
