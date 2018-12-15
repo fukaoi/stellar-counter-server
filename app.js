@@ -25,7 +25,11 @@ async function lumen(ctx) {
 }
 
 async function token(ctx) {
-  await ctx.render('token', { lists: lists })
+  await ctx.render('token', {
+    horizonUrl: config['horizonUrl'],
+    publicKey: config['publicKey'],
+    limit: config['limit']
+  })
 }
 
 async function send(ctx) {
