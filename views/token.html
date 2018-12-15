@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block title %}Lumen{% endblock %}
+{% block title %}Token{% endblock %}
 
 {% block content %}
 
@@ -8,11 +8,16 @@
   <h1>{{publicKey}}</h1>Reply server address
 </p>
 
-<h1>Sended Customize Token</h1>
+<h1>Trustline</h1>
+<p>Your token can permit</p>
+<input type="text" placeholder="Token code" size="10">
+<input type="submit" value="Permit">
+
+<h1>Sended Token</h1>
 <p>Reply server sended Token lists (latest: {{limit}})</p>
 <table id="sendLists"></table>
 
-<h1>Received Customize Token</h1>
+<h1>Received Token</h1>
 <p>Your sended Token lists(latest: {{limit}})</p>
 <table id="receiveLists"></table>
 
