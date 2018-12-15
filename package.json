@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev.start": "pm2-dev start app.js",
+    "dev.stop": "pm2-dev stop app.js"
   },
   "author": "",
   "license": "ISC",
