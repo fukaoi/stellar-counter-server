@@ -1,5 +1,5 @@
 {
-  "name": "stellar-counter-server",
+  "name": "stellar-reply-server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
