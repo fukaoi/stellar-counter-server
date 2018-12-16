@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "dev.start": "pm2-dev start app.js",
     "dev.stop": "pm2-dev stop app.js"
   },
