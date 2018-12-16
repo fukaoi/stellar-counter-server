@@ -10,8 +10,9 @@
 
 <h1>Trustline</h1>
 <p>Your token can permit</p>
-<input type="text" placeholder="Token code" size="10">
-<input type="submit" value="Permit">
+<input type="text" id="assetName" placeholder="Token code" value="" size="10">
+<input type="text" id="issuerPublicKey" placeholder="Issuer public key" value="" size="64">
+<input type="submit" value="Permit" onClick="trust()">
 
 <h1>Refunded Token</h1>
 <p>Refunded Token transactions list ( Display: {{limit}} results )</p>
@@ -20,5 +21,21 @@
 <h1>Received Token</h1>
 <p>Your sended Token transactions( Display: {{limit}} results )</p>
 <table id="receiveLists"></table>
+
+<script>
+  const trust = async () => {
+    const assetName = document.getElementById('assetName').value
+    const issuerPublicKey = document.getElementById('issuerPublicKey').value
+    try {
+      await fetch('http://localhost:3000/trust', {
+      method: "post",
+      cache: "no-cache",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({assetName: assetName, issuerPublicKey: issuerPublicKey})})
+    } catch (error) {
+      console.error(error)
+    }
+  }
+</script>
 
 {% endblock %}
