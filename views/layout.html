@@ -157,7 +157,7 @@
 
   const send = async data => {
     try {
-      await fetch('http://localhost:3000/send', {
+      await fetch('/send', {
       method: "post",
       cache: "no-cache",
       headers: { "Content-Type": "application/json" },

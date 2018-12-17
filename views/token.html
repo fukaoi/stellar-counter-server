@@ -27,7 +27,7 @@
     const assetName = document.getElementById('assetName').value
     const issuerPublicKey = document.getElementById('issuerPublicKey').value
     try {
-      await fetch('http://localhost:3000/trust', {
+      await fetch('/trust', {
       method: "post",
       cache: "no-cache",
       headers: { "Content-Type": "application/json" },
