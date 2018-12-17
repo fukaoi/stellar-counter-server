@@ -80,6 +80,18 @@
       height: 45px;
       font-size: 105%;
     }
+
+    .success {
+      font-weight: bold;
+      color: forestgreen;
+      font-size: 120%;
+    }
+
+    .error {
+      font-weight: bold;
+      color:red;
+      font-size: 120%
+    }
   </style>
 
 <body>
@@ -95,16 +107,17 @@
   let receive_pool = []
   let send_pool = []
 
-  const html = message =>
-    `<tr class="transition" id="${message.transaction_hash}">
-      <td align="left">
-        <a href="https://testnet.steexp.com/tx/${message.transaction_hash}" target="_blank">${message.from}</a>
-      </td>
-      <td align="right">${message.amount}</td>
-      <td align="center" width="200px" class="memo"> </td>
-      <td align="right">${message.created_at}</td>
-    </tr>`
-
+  const html = message => {
+    const asset_code = message.asset_type != 'native' ? `(${message.asset_code})` : ''
+    return `<tr class="transition" id="${message.transaction_hash}">
+            <td align="left">
+            <a href="https://testnet.steexp.com/tx/${message.transaction_hash}" target="_blank">${message.from}</a>
+            </td>
+            <td align="right">${message.amount} ${asset_code}</td>
+            <td align="center" width="200px" class="memo"> </td>
+            <td align="right">${message.created_at}</td>
+          </tr>`
+  }  
 
   const txinfo = message => {
     let elementId

@@ -4,19 +4,16 @@
 
 {% block content %}
 
-<p>
-  <h2>{{publicKey}}</h2>Reply server address
-</p>
+<p><h2>{{publicKey}}</h2>Reply server address</p>
 
 <h1>Trustline</h1>
-<p>Your token can permit</p>
+<p id="trustlineMessage">Your token can permit</p>
 <input type="text" id="assetName" placeholder="Token code" value="" size="10">
 <input type="text" id="issuerPublicKey" placeholder="Issuer public key" value="" size="64">
 <input type="submit" value="Permit" onClick="trust()">
 
 <h1>Refunded Token</h1>
 <p>Refunded Token transactions list ( Display: {{limit}} results )</p>
-<table id="sendLists"></table>
 
 <h1>Received Token</h1>
 <p>Your sended Token transactions( Display: {{limit}} results )</p>
@@ -27,14 +24,33 @@
     const assetName = document.getElementById('assetName').value
     const issuerPublicKey = document.getElementById('issuerPublicKey').value
     try {
-      await fetch('/trust', {
+      const res = await fetch('/trust', {
       method: "post",
       cache: "no-cache",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({assetName: assetName, issuerPublicKey: issuerPublicKey})})
+      document.getElementById('assetName').value = ''
+      document.getElementById('issuerPublicKey').value = ''
+      if (res.status == '201') {
+        trustlineMessage('Success trustline!!')
+      } else {
+        trustlineMessage(`Error No expected status: ${res.status}`, true)
+      }
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const trustlineMessage = (message, isError = false) => {
+    let css
+    if (isError) {
+      document.getElementById('trustlineMessage').classList.remove('success')
+      document.getElementById('trustlineMessage').classList.add('error')
+    } else {
+      document.getElementById('trustlineMessage').classList.remove('error')
+      document.getElementById('trustlineMessage').classList.add('success')
+    }        
+    document.getElementById('trustlineMessage').innerHTML = message
   }
 </script>
 

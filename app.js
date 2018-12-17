@@ -54,7 +54,7 @@ async function trust(ctx) {
   let status, body
   if (!param.assetName || !param.issuerPublicKey) {
     status = 404
-    body = `Not found parameters => assetName:${param.assetName}, issuerPublicKey:${issuerPublicKey}`
+    body = `Not found parameters => assetName:${param.assetName}, issuerPublicKey:${param.issuerPublicKey}`
   } else {
     const response = new StellarClient().trustLine(param.assetName, param.issuerPublicKey)
     status = 201
