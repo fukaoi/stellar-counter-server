@@ -42,15 +42,15 @@
   }
 
   const trustlineMessage = (message, isError = false) => {
-    let css
+    const element = document.getElementById('trustlineMessage')
     if (isError) {
-      document.getElementById('trustlineMessage').classList.remove('success')
-      document.getElementById('trustlineMessage').classList.add('error')
+      element.classList.remove('success')
+      element.classList.add('error')
     } else {
-      document.getElementById('trustlineMessage').classList.remove('error')
-      document.getElementById('trustlineMessage').classList.add('success')
+      element.classList.remove('error')
+      element.classList.add('success')
     }        
-    document.getElementById('trustlineMessage').innerHTML = message
+    element.innerHTML = message
   }
 </script>
 
