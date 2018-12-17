@@ -21,16 +21,21 @@
 
 <script>
   const trust = async () => {
-    const assetName = document.getElementById('assetName').value
-    const issuerPublicKey = document.getElementById('issuerPublicKey').value
+    const assetElement = document.getElementById('assetName')
+    const publicKeyElement = document.getElementById('issuerPublicKey')
     try {
       const res = await fetch('/trust', {
       method: "post",
       cache: "no-cache",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({assetName: assetName, issuerPublicKey: issuerPublicKey})})
-      document.getElementById('assetName').value = ''
-      document.getElementById('issuerPublicKey').value = ''
+      body: JSON.stringify(
+        {
+          assetName: assetElement.value, 
+          issuerPublicKey: publicKeyElement.value
+        }
+      )})
+      assetElement.value = ''
+      publicKeyElement.value = ''
       if (res.status == '201') {
         trustlineMessage('Success trustline!!')
       } else {
