@@ -24,6 +24,6 @@
     "minimist": ">=1.2.2"
   },
   "devDependencies": {
-    "pm2": "^3.5.2"
+    "pm2": "^4.5.6"
   }
 }
