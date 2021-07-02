@@ -19,7 +19,7 @@
     "koa-views": "^6.2.1",
     "minimist": ">=1.2.2",
     "shelljs": "^0.8.3",
-    "stellar-sdk": "^8.2.2",
+    "stellar-sdk": "^8.2.3",
     "swig": "^0.14.0",
     "uglify-js": "^3.8.0",
     "ws": ">=7.4.6"
